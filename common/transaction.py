@@ -1,11 +1,12 @@
 from typing import Any, Dict
 import cbors
 import base64
+from pycoin.encoding.hexbytes import b2h, h2b
+from pycoin.satoshi.der import sigdecode_der
+from bitcoin.main import encode_sig, decode_sig, ecdsa_raw_recover, encode_pubkey
 import binascii
-import json
-from pycoin.serialize import h2b, b2h
-from pycoin.tx.script.der import sigdecode_der
-from pybitcoin.main import encode_sig, decode_sig, ecdsa_raw_recover, encode_pubkey
+
+cid_prefix = bytes([0x01, 0x71, 0xa0, 0xe4, 0x02, 0x20])
 
 
 def get_signature(sign_hex, unsign_hex, pubkey):
@@ -55,7 +56,7 @@ class FilTransaction:
             GasFeeCap: int,
             GasPremium: int,
             Method: int,
-            Params: str,
+            Params: any,
             Version: int):
         self.From = From
         self.To = To
@@ -81,6 +82,7 @@ class FilTransaction:
             'Params': self.Params,
             'Version': self.Version
         }
+
         sign_msg: Dict[str, Any] = {
             "Type": 1,
             "Data": base64.b64encode(binascii.unhexlify(sign_dt)).decode('utf-8')
@@ -89,7 +91,7 @@ class FilTransaction:
             "Message": tx_msg,
             "Signature": sign_msg
         }
-        return json.dumps(signed_tx_data, separators=(",", ":"))
+        return signed_tx_data
 
     def _b32_padding(self, s: str):
         return s + ("=" * (8 - (len(s) % 8)))

@@ -5,7 +5,7 @@ from secp256k1 import PrivateKey
 cid_prefix = bytes([0x01, 0x71, 0xa0, 0xe4, 0x02, 0x20])
 
 
-def filecoin_sign(ft, pri_key, pub_key):
+def sign(ft, pri_key, pub_key):
     digest_cbor = hashlib.blake2b(digest_size=32, key=b"", salt=b"", person=b"")
     digest_cbor.update(ft.cbor_serial())
     digest_sign = hashlib.blake2b(digest_size=32, key=b"", salt=b"", person=b"")

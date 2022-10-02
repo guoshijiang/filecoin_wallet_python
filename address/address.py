@@ -1,7 +1,6 @@
 from typing import Union
-from common.helper import (
-    s2b, address_encode, address_hash, checksum, b2s
-)
+from common.helper import (s2b, address_encode, address_hash, checksum, b2s)
+
 
 def pubkey_to_address(pubkey: Union[bytes, str]):
     network_prefix = 'f'
